@@ -10,13 +10,7 @@ class ForumComponent extends Component<any, any> {
 
     constructor(props: any) {
         super(props);
-        this.state = {
-            posts: [
-                new Post(1, "greyshack", "first post"),
-                new Post(2, "greyshack", "first post"),
-                new Post(3, "greyshack", "first post"),
-            ]
-        };
+        this.state = {};
     }
 
     render() {
@@ -24,8 +18,19 @@ class ForumComponent extends Component<any, any> {
             <div>
                 {this.props.posts.map((p: any) => <PostComponent key={p.id} post={p} />)}
             </div>
-            <button className="btn btn-primary" onClick={() => this.props.history.push("/new-post")}>New post</button>
-        </div>;
+            <div className="row" style={{ margin: 10 }}>
+                <div className="col">
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "center"
+                    }}>
+                        <button className="btn btn-primary" onClick={() => this.props.history.push("/new-post")}>New post</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div >;
     }
 }
 

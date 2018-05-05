@@ -2,10 +2,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { addNewPost, updatePostForm, analyseNewPost, clearAnalysis } from "../actions";
+import { addNewPost, updatePostForm, putAnalysis, analyseNewPost, clearAnalysis } from "../actions";
 import { AnalysisMatch, AnalysisResult } from "../model/analysis";
 import { AppState } from "../reducers";
 import Post from "../model/post";
+import axios, { AxiosPromise } from "axios";
 
 import "react-tippy/dist/tippy.css";
 const Tooltip = require("react-tippy").Tooltip;
@@ -39,7 +40,25 @@ class PostFormComponent extends Component<any, any> {
 
     onFormSubmit() {
         const post = new Post(this.props.posts.length + 1, this.props.author, this.props.content);
-        this.props.analyseNewPost(post, this.props.posts);
+        let payload = {
+            newPost: post,
+            posts: this.props.posts
+        };
+        axios.post(`http://localhost:8090/api/post/analyze`, payload)
+            .then(r => {
+                if (r.data.matches.length > 0) {
+                    this.props.putAnalysis(r.data);
+                }
+                else {
+                    this.createPost();
+                }
+            })
+            .catch(e => {
+                console.error(e);
+                this.createPost();
+            });
+
+        // this.props.analyseNewPost(post, this.props.posts);
     }
 
     createPost() {
@@ -64,13 +83,14 @@ class PostFormComponent extends Component<any, any> {
                     </div>
                     <div className="col-md-8">
                         {this.props.analysisResult.matches.map((m: AnalysisMatch) =>
-                            <div className="row" style={{ margin: 10 }}>
+                            <div key={m.postId} className="row" style={{ margin: 10 }}>
                                 <div className="col-md-10">
                                     <div className="card">
                                         <div className="card-body">
                                             <div>
                                                 {m.sentences.map((sentence, index) =>
                                                     <Tooltip
+                                                        key={`${m.postId}_${index}`}
                                                         title={`Similarity: ${(sentence.similarity * 100).toFixed(2)}%`}
                                                         position="bottom"
                                                         trigger="mouseenter">
@@ -81,7 +101,7 @@ class PostFormComponent extends Component<any, any> {
                                                                 style={{ textDecoration: "underline", textDecorationColor: rgb2hex(Math.floor(2.55 * 100 * sentence.similarity), 0, 0) }}>
                                                                 {sentence.content}
                                                             </span>
-                                                            <span> </span>
+                                                            <span > </span>
                                                         </span>
                                                     </Tooltip>
 
@@ -102,7 +122,7 @@ class PostFormComponent extends Component<any, any> {
                     </div>
                 </div>
 
-                <div className="row" style={{ margin: 20 }}>
+                <div className="row" style={{ margin: 10 }}>
                     <div className="col-md-12">
                         <div className="card">
                             <div className="card-body">
@@ -117,12 +137,12 @@ class PostFormComponent extends Component<any, any> {
                         </div>
                     </div>
                 </div>
-                <div className="row" style={{ margin: 20 }}>
+                <div className="row" style={{ margin: 10 }}>
                     <div className="col">
-                        <button style={{ position: "absolute", right: 10 }} onClick={() => this.props.clearAnalysis()} className="btn btn-primary">Cancel</button>
+                        <button style={{ position: "absolute", right: 5 }} onClick={() => this.props.clearAnalysis()} className="btn btn-primary">Cancel</button>
                     </div>
                     <div className="col">
-                        <button style={{ position: "absolute", left: 10 }} onClick={() => { this.createPost(); }} className="btn btn-danger">Post anyway</button>
+                        <button style={{ position: "absolute", left: 5 }} onClick={() => { this.createPost(); }} className="btn btn-danger">Post anyway</button>
                     </div>
                 </div>
             </div>;
@@ -135,8 +155,14 @@ class PostFormComponent extends Component<any, any> {
                     <div className="form-group">
                         <textarea value={this.props.content} onChange={this.onContentChange} className="form-control" placeholder="Post content" id="exampleFormControlTextarea1" rows={3}></textarea>
                     </div>
-                    <button onClick={() => this.props.history.push("/")} className="btn btn-primary">Cancel</button>
-                    <button className="btn btn-primary mb-2" onClick={this.onFormSubmit}>Post</button>
+                    <div className="row">
+                        <div className="col">
+                            <button style={{ position: "absolute", right: 5 }} onClick={() => this.props.history.push("/")} className="btn btn-primary">Cancel</button>
+                        </div>
+                        <div className="col">
+                            <button style={{ position: "absolute", left: 5 }} className="btn btn-primary mb-2" onClick={this.onFormSubmit}>Post</button>
+                        </div>
+                    </div>
                 </form>
             </div >;
         }
@@ -156,5 +182,5 @@ function mapStateToProps(appState: AppState) {
     };
 }
 
-export default connect(mapStateToProps, { addNewPost, updatePostForm, analyseNewPost, clearAnalysis })(PostFormComponent);
+export default connect(mapStateToProps, { addNewPost, updatePostForm, analyseNewPost, putAnalysis, clearAnalysis })(PostFormComponent);
 

@@ -5,7 +5,7 @@ import { AnalysisMatch, AnalysisResult } from "../model/analysis";
 export function analysePostReducer(state: AnalysisResult | null = null, action: any): AnalysisResult | null {
     switch (action.type) {
         case ActionType.ANALYSE_POST:
-            return action.payload;
+            return action.payload === undefined ? null : action.payload;
         case ActionType.CLEAR_ANALYSIS:
             return null;
         default:

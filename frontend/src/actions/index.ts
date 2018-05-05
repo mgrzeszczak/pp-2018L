@@ -34,6 +34,13 @@ export function clearAnalysis(): any {
     };
 }
 
+export function putAnalysis(res: AnalysisResult): any {
+    return {
+        type: ActionType.ANALYSE_POST,
+        payload: res
+    };
+}
+
 export function analyseNewPost(post: Post, posts: Post[]): any {
     let payload = {
         newPost: post,
@@ -41,7 +48,14 @@ export function analyseNewPost(post: Post, posts: Post[]): any {
     };
     let promise = new Promise((resolve, reject) => {
         axios.post(`${API_URL}/post/analyze`, payload)
-            .then(r => resolve(r.data))
+            .then(r => {
+                if (r.data.matches.length > 0) {
+                    resolve(r.data);
+                }
+                else {
+                    resolve(undefined);
+                }
+            })
             .catch(e => reject(e));
     });
 
