@@ -12,6 +12,7 @@ class PostService:
     def __init__(self, path_to_model, path_to_vocab):
         self.model = load_model(path_to_model)
         self.vocab = load_vocab(path_to_vocab)
+        self.model._make_predict_function()
 
     def __encode(self, sentence):
         return encode_sentence(prepare_sentence(sentence), self.vocab)
@@ -20,7 +21,8 @@ class PostService:
         new_post = data['newPost']
         posts = data['posts']
 
-        post_sentences = list(map(lambda x: sent_tokenize(x['content']), posts))
+        post_sentences = list(
+            map(lambda x: sent_tokenize(x['content']), posts))
 
         existing_sentences = []
         for p in post_sentences:
@@ -35,7 +37,8 @@ class PostService:
             encoded_existing = list(map(self.__encode, existing_sentences))
 
             x1 = np.array(encoded_new_post * len(existing_sentences))
-            x2 = np.repeat(np.array(encoded_existing), len(new_post_sentences), axis=0)
+            x2 = np.repeat(np.array(encoded_existing),
+                           len(new_post_sentences), axis=0)
 
             predictions = self.model.predict([x1, x2])
             res = predictions.flatten()
@@ -51,7 +54,8 @@ class PostService:
                     'matchedSentenceNo': int(which)
                 }
 
-            results = list(map(lambda x: select_top_score(x[0], x[1]), enumerate(results)))
+            results = list(map(lambda x: select_top_score(
+                x[0], x[1]), enumerate(results)))
 
             current = 0
             matches = []

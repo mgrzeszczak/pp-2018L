@@ -4,3 +4,5 @@ node_modules/
 build/
 dist/
 files/
+__pycache__/
+*.zip
