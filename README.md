@@ -1,5 +1,7 @@
 # repeating-questions-forum
 
+Trained model with data: https://drive.google.com/file/d/1uaX5zYwerGraBD_O16cgu1bweoHhSoFJ/view?usp=sharing
+
 # License
 ```
 MIT License
