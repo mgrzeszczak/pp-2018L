@@ -6,5 +6,5 @@ export interface AnalysisResult {
 
 export interface AnalysisMatch {
     postId: number;
-    sentences: { content: string, similarity: number, matchedSentenceNo: number }[];
+    sentence: { content: string, similarity: number, matchedSentenceNo: number };
 }

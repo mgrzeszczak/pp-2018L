@@ -3,6 +3,7 @@ import Post from "../model/post";
 
 export interface PostComponentProps {
     post: Post;
+    focus: boolean;
 }
 
 interface PostComponentState {
@@ -31,7 +32,7 @@ export class PostComponent extends Component<PostComponentProps, PostComponentSt
                 <div
                     onMouseEnter={() => this.updateSelected(true)}
                     onMouseLeave={() => this.updateSelected(false)}
-                    className={(this.state.selected ? "border-primary" : "") + " card"} id={"post-" + this.props.post.id}>
+                    className={(this.state.selected ? "border-primary" : "") + " card " + (this.props.focus ? "bg-primary text-white" : "")} id={"post-" + this.props.post.id}>
                     <div className="card-header">{`#${this.props.post.id} ${this.props.post.author} - ${new Date(this.props.post.timestamp).toLocaleString()}`}</div>
                     <div className="card-body">
                         <p className="card-text">{this.props.post.content}</p>

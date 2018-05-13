@@ -20,7 +20,8 @@ class PostFormComponent extends Component<any, any> {
         this.onContentChange = this.onContentChange.bind(this);
         this.onFormSubmit = this.onFormSubmit.bind(this);
         this.state = {
-            highlightedSentenceNo: null
+            highlightedSentenceNo: null,
+            highlightedSimilarSentence: null
         };
     }
 
@@ -82,30 +83,31 @@ class PostFormComponent extends Component<any, any> {
                     <div className="col-md-2">
                     </div>
                     <div className="col-md-8">
-                        {this.props.analysisResult.matches.map((m: AnalysisMatch) =>
+                        {this.props.analysisResult.matches.map((m: AnalysisMatch, index: number) =>
                             <div key={m.postId} className="row" style={{ margin: 10 }}>
                                 <div className="col-md-10">
                                     <div className="card">
                                         <div className="card-body">
                                             <div>
-                                                {m.sentences.map((sentence, index) =>
-                                                    <Tooltip
-                                                        key={`${m.postId}_${index}`}
-                                                        title={`Similarity: ${(sentence.similarity * 100).toFixed(2)}%`}
-                                                        position="bottom"
-                                                        trigger="mouseenter">
-                                                        <span>
-                                                            <span
-                                                                onMouseEnter={() => this.setState({ highlightedSentenceNo: sentence.matchedSentenceNo })}
-                                                                onMouseLeave={() => this.setState({ highlightedSentenceNo: null })}
-                                                                style={{ textDecoration: "underline", textDecorationColor: rgb2hex(Math.floor(2.55 * 100 * sentence.similarity), 0, 0) }}>
-                                                                {sentence.content}
-                                                            </span>
-                                                            <span > </span>
+                                                <Tooltip
+                                                    key={`${m.postId}_${index}`}
+                                                    title={`Similarity: ${(m.sentence.similarity * 100).toFixed(2)}%`}
+                                                    position="bottom"
+                                                    trigger="mouseenter">
+                                                    <span>
+                                                        <span
+                                                            onMouseEnter={() => this.setState({ highlightedSentenceNo: m.sentence.matchedSentenceNo, highlightedSimilarSentence: { index: index, postId: m.postId } })}
+                                                            onMouseLeave={() => this.setState({ highlightedSentenceNo: null, highlightedSimilarSentence: null })}
+                                                            style={{
+                                                                textDecoration: "underline",
+                                                                textDecorationColor: rgb2hex(Math.floor(2.55 * 100 * m.sentence.similarity), 0, 0),
+                                                                backgroundColor: this.state.highlightedSimilarSentence != null && this.state.highlightedSimilarSentence.index === index && this.state.highlightedSimilarSentence.postId === m.postId ? "#ddd" : "white"
+                                                            }}>
+                                                            {m.sentence.content}
                                                         </span>
-                                                    </Tooltip>
-
-                                                )}
+                                                        <span > </span>
+                                                    </span>
+                                                </Tooltip>
                                             </div>
                                         </div>
                                     </div>

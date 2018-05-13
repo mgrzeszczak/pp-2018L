@@ -6,3 +6,4 @@ dist/
 files/
 __pycache__/
 *.zip
+.DS_Store

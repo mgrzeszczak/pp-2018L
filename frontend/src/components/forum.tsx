@@ -14,9 +14,19 @@ class ForumComponent extends Component<any, any> {
     }
 
     render() {
+        console.log(this.props.location);
+        const re = /#post-(\d+)/;
+        let result: number | null = null;
+        if (this.props.location.hash !== undefined && this.props.location.hash != null) {
+            let match: any = re.exec(this.props.location.hash);
+            if (match != null) {
+                result = parseInt(match[1]);
+            }
+        }
+
         return <div>
             <div>
-                {this.props.posts.map((p: any) => <PostComponent key={p.id} post={p} />)}
+                {this.props.posts.map((p: any) => <PostComponent key={p.id} post={p} focus={p.id === result} />)}
             </div>
             <div className="row" style={{ margin: 10 }}>
                 <div className="col">
