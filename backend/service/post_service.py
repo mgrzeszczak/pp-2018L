@@ -31,6 +31,9 @@ class PostService:
 
         new_post_sentences = sent_tokenize(new_post['content'])
 
+        print(len(existing_sentences))
+        print(existing_sentences)
+
         if len(existing_sentences) > 0:
 
             encoded_new_post = list(map(self.__encode, new_post_sentences))
@@ -60,19 +63,23 @@ class PostService:
             current = 0
             matches = []
             for t in enumerate(post_sentences):
-                matches.append({
-                    'sentences': results[current:current + len(t[1])],
-                    'postId': posts[t[0]]['id']
-                })
+                sentences = results[current:current + len(t[1])]
+                post_id = posts[t[0]]['id']
+                for s in sentences:
+                    matches.append({
+                        'sentence': s,
+                        'postId': post_id
+                    })
                 current += len(t[1])
 
-            top_3 = sorted(filter(lambda x: max(map(lambda y: y['similarity'], x['sentences'])) > THRESHOLD, matches),
-                           key=lambda m: max(map(lambda x: x['similarity'], m['sentences'])), reverse=True)[:3]
+            # filter(lambda x: max(map(lambda y: y['similarity'], x['sentences'])) > THRESHOLD, matches)
+            top_5 = sorted(
+                matches, key=lambda m: m['sentence']['similarity'], reverse=True)[:5]
         else:
-            top_3 = []
+            top_5 = []
 
-        print(top_3)
+        print(top_5)
         return {
-            'matches': top_3,
+            'matches': top_5,
             'postSentences': new_post_sentences
         }
