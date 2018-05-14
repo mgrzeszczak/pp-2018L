@@ -39,7 +39,8 @@ class PostFormComponent extends Component<any, any> {
         });
     }
 
-    onFormSubmit() {
+    onFormSubmit(event: any) {
+        event.preventDefault();
         const post = new Post(this.props.posts.length + 1, this.props.author, this.props.content);
         let payload = {
             newPost: post,
@@ -48,6 +49,8 @@ class PostFormComponent extends Component<any, any> {
         axios.post(`http://localhost:8090/api/post/analyze`, payload)
             .then(r => {
                 if (r.data.matches.length > 0) {
+                    console.log("found match");
+                    console.log(r.data);
                     this.props.putAnalysis(r.data);
                 }
                 else {
@@ -159,7 +162,10 @@ class PostFormComponent extends Component<any, any> {
                     </div>
                     <div className="row">
                         <div className="col">
-                            <button style={{ position: "absolute", right: 5 }} onClick={() => this.props.history.push("/")} className="btn btn-primary">Cancel</button>
+                            <button style={{ position: "absolute", right: 5 }} onClick={(e: any) => {
+                                e.preventDefault();
+                                this.props.history.push("/");
+                            }} className="btn btn-primary">Cancel</button>
                         </div>
                         <div className="col">
                             <button style={{ position: "absolute", left: 5 }} className="btn btn-primary mb-2" onClick={this.onFormSubmit}>Post</button>
