@@ -4,7 +4,7 @@ from ml.utils import load_vocab
 from ml.utils import encode_sentence
 from ml.utils import prepare_sentence
 from nltk import sent_tokenize
-
+import json
 THRESHOLD = 0.65
 
 
@@ -78,7 +78,15 @@ class PostService:
         else:
             top_5 = []
 
-        print(top_5)
+        try:
+            with open('stats', 'a') as f:
+                data = {
+                    post: new_post,
+                    results: top_5
+                }
+                f.write(json.dumps(data))
+        except:
+            pass
         return {
             'matches': top_5,
             'postSentences': new_post_sentences

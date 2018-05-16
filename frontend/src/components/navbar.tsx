@@ -19,10 +19,10 @@ export default class NavbarComponent extends Component<{ title: string }, {}> {
     return <header>
       <nav className="navbar navbar-expand-md navbar-dark bg-dark">
         <a className="navbar-brand" href="#">{this.props.title}</a>
-        <div style={{ position: "absolute", right: 10 }}>
+        {/* <div style={{ position: "absolute", right: 10 }}>
           <button className="btn btn-success" style={btnStyle}>Import thread</button>
           <button className="btn btn-danger" style={btnStyle}>Export thread</button>
-        </div>
+        </div> */}
       </nav>
     </header>;
   }

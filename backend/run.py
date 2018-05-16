@@ -10,7 +10,7 @@ app.register_blueprint(post_blueprint)
 
 
 def main():
-    app.run(port=8090)
+    app.run(host="0.0.0.0", port=8090)
 
 
 if __name__ == '__main__':

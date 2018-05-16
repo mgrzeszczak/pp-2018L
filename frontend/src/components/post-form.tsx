@@ -26,6 +26,7 @@ class PostFormComponent extends Component<any, any> {
     }
 
     onAuthorChange(event: any) {
+        event.preventDefault();
         this.props.updatePostForm({
             content: this.props.content,
             author: event.target.value
@@ -33,24 +34,27 @@ class PostFormComponent extends Component<any, any> {
     }
 
     onContentChange(event: any) {
+        event.preventDefault();
         this.props.updatePostForm({
             content: event.target.value,
             author: this.props.author
         });
     }
 
-    onFormSubmit() {
+    onFormSubmit(event: any) {
+        event.preventDefault();
         const post = new Post(this.props.posts.length + 1, this.props.author, this.props.content);
         let payload = {
             newPost: post,
             posts: this.props.posts
         };
-        axios.post(`http://localhost:8090/api/post/analyze`, payload)
+        axios.post(`http://54.38.52.191:8090/api/post/analyze`, payload)
             .then(r => {
                 if (r.data.matches.length > 0) {
                     this.props.putAnalysis(r.data);
                 }
                 else {
+                    console.log("found no matches");
                     this.createPost();
                 }
             })

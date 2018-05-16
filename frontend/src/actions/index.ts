@@ -1,7 +1,7 @@
 import axios, { AxiosPromise } from "axios";
 import Post from "../model/post";
 import { AnalysisResult, AnalysisMatch } from "../model/analysis";
-const API_URL = "http://localhost:8090/api";
+const API_URL = "http://89.72.3.121:8090/api";
 
 export enum ActionType {
     ADD_NEW_POST,
@@ -46,6 +46,8 @@ export function analyseNewPost(post: Post, posts: Post[]): any {
         newPost: post,
         posts: posts
     };
+
+    console.log(`${API_URL}/post/analyze`);
     let promise = new Promise((resolve, reject) => {
         axios.post(`${API_URL}/post/analyze`, payload)
             .then(r => {
