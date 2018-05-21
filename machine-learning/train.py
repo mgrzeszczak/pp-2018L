@@ -109,10 +109,7 @@ def encode_sentence(sentence, ft_model):
 
 def data_generator(x1, x2, y, batch_size, embed_fn):
     size = len(y)
-    epoch = 0
     while True:
-        print('epoch = {}'.format(epoch))
-        epoch += 1
         indices = np.random.permutation(size)
         while len(indices) > 0:
             selected = indices[:batch_size]
@@ -155,9 +152,6 @@ def calculate_steps(size, batch_size):
 def main():
     q1s, q2s, y = load_data('questions.csv')
     ft_model = fastText.load_model('wiki.en.bin')
-    q1s = q1s[:1000]
-    q2s = q2s[:1000]
-    y = y[:1000]
 
     q1_train, q1_test, q2_train, q2_test, y_train, y_test = train_test_split(
         q1s, q2s, y)
