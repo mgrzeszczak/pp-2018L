@@ -1,13 +1,12 @@
 
 import React, { Component } from "react";
-import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { bindActionCreators } from "redux";
-import { AppState } from "../reducers";
 import Post from "../model/post";
 
-export default class NavbarComponent extends Component<{ title: string }, {}> {
+class NavbarComponent extends Component<any, {}> {
 
-  constructor(props: { title: string }) {
+  constructor(props: any) {
     super(props);
     this.state = {};
   }
@@ -16,9 +15,13 @@ export default class NavbarComponent extends Component<{ title: string }, {}> {
     let btnStyle = {
       margin: 10
     };
+    console.log(this.props);
     return <header>
       <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-        <a className="navbar-brand" href="#">{this.props.title}</a>
+        <a className="navbar-brand" href="#">Repeating questions</a>
+        <div style={{ position: "absolute", right: 10 }}>
+          <button className="btn btn-primary" onClick={() => this.props.history.push("/new-post")}>New post</button>
+        </div>
         {/* <div style={{ position: "absolute", right: 10 }}>
           <button className="btn btn-success" style={btnStyle}>Import thread</button>
           <button className="btn btn-danger" style={btnStyle}>Export thread</button>
@@ -27,3 +30,5 @@ export default class NavbarComponent extends Component<{ title: string }, {}> {
     </header>;
   }
 }
+
+export default withRouter(NavbarComponent);
