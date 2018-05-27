@@ -5,7 +5,7 @@ from ml.utils import encode_sentence
 from ml.utils import prepare_sentence
 from nltk import sent_tokenize
 import json
-THRESHOLD = 0.8
+THRESHOLD = 0.65
 
 
 class PostService:
