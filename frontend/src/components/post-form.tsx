@@ -48,7 +48,7 @@ class PostFormComponent extends Component<any, any> {
             newPost: post,
             posts: this.props.posts
         };
-        axios.post(`http://54.38.52.191:8090/api/post/analyze`, payload)
+        axios.post(`http://localhost:8090/api/post/analyze`, payload)
             .then(r => {
                 if (r.data.matches.length > 0) {
                     console.log("found match");

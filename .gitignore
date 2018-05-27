@@ -7,3 +7,9 @@ files/
 __pycache__/
 *.zip
 .DS_Store
+*.tar.gz
+*.gz
+*.zip
+.venv
+.ipynb_checkpoints/
+Dockerfile

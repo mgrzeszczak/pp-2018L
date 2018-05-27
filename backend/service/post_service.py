@@ -5,7 +5,7 @@ from ml.utils import encode_sentence
 from ml.utils import prepare_sentence
 from nltk import sent_tokenize
 import json
-THRESHOLD = 0.65
+THRESHOLD = 0.8
 
 
 class PostService:
@@ -22,7 +22,7 @@ class PostService:
         posts = data['posts']
 
         post_sentences = list(
-            map(lambda x: sent_tokenize(x['content']), posts))
+            map(lambda x: list(filter(lambda x: '?' in x, sent_tokenize(x['content']))), posts))
 
         existing_sentences = []
         for p in post_sentences:
@@ -73,16 +73,19 @@ class PostService:
                 current += len(t[1])
 
             # filter(lambda x: max(map(lambda y: y['similarity'], x['sentences'])) > THRESHOLD, matches)
-            top_5 = sorted(
-                matches, key=lambda m: m['sentence']['similarity'], reverse=True)[:5]
+
+            top_5 = list(sorted(filter(lambda x: x['sentence']['similarity'] >= THRESHOLD,
+                                       matches), key=lambda m: m['sentence']['similarity'], reverse=True))[:3]
+
+            #top_5 = sorted(matches, key=lambda m: m['sentence']['similarity'], reverse=True)[:5]
         else:
             top_5 = []
 
         try:
             with open('stats', 'a') as f:
                 data = {
-                    post: new_post,
-                    results: top_5
+                    'post': new_post,
+                    'results': top_5
                 }
                 f.write(json.dumps(data))
         except:
